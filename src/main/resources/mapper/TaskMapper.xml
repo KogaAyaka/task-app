@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.task_app.mapper.TaskMapper">
+
+    <select id="findAll" resultType="com.example.task_app.dto.TaskDto"> SELECT task_id, title,
+        description, status, created_by, created_at, updated_at, deleted FROM task WHERE deleted =
+        false ORDER BY task_id ASC </select>
+
+    <insert id="createTask" parameterType="com.example.task_app.dto.TaskDto"> insert into task
+        (title, description, status, created_by, created_at, updated_at, deleted) values ( #{title},
+        #{description}, #{status}, #{createdBy}, NOW(), NOW(), false ) </insert>
+
+    <select id="findByTaskId" parameterType="Integer" resultType="com.example.task_app.dto.TaskDto">
+        SELECT task_id, title, description, status, created_by, created_at, updated_at, deleted FROM
+        task WHERE task_id = #{taskId} </select>
+
+    <update id="updateByTaskId" parameterType="com.example.task_app.form.TaskForm"> update task set
+        title = #{title}, description=#{description}, status=#{status}, updated_at=Now() WHERE
+        task_id=#{taskId} </update>
+
+    <update id="deletedByTaskId" parameterType="Integer"> update task set deleted = true WHERE
+        task_id=#{taskId} </update>
+
+    <select id="search"
+        resultType="com.example.task_app.dto.TaskDto"> SELECT task_id, title, description, status,
+        created_by, created_at, updated_at, deleted FROM task <where> deleted = false <if
+                test="keyword != null and keyword != ''"> AND title LIKE '%' || #{keyword} || '%' </if>
+            <if
+                test="status != null and status != ''"> AND status = #{status} </if>
+        </where>
+        ORDER BY task_id ASC </select>
+
+</mapper>

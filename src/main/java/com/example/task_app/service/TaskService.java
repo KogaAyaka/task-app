@@ -62,32 +62,9 @@ public class TaskService {
     public int deletedTask(Integer taskId) {
         return taskMapper.deletedByTaskId(taskId);
     }
-
-    /**
-     * 検索一覧を表示する
-     * 
-     * @return
-     */
-    public List<TaskDto> searchTask(String keyword, String status) {
-        return taskMapper.searchList(keyword, status);
-    }
-
-    /**
-     * 検索一覧を表示する(状態関連)
-     * 
-     * @return
-     */
-    public List<TaskDto> searchByStatus(String status) {
-        return taskMapper.searchStatusList(status);
-    }
-
-    /**
-     * 検索一覧を表示する(タイトル検索)
-     * 
-     * @return
-     */
-    public List<TaskDto> searchByKeyword(String keyword) {
-        return taskMapper.searchKeywordList(keyword);
+    
+    public List<TaskDto> search(String keyword, String status){
+        return taskMapper.search(keyword,status);
     }
 
 }

@@ -2,10 +2,9 @@ package com.example.task_app.mapper;
 
 import java.util.List;
 
-import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
-import org.apache.ibatis.annotations.Update;
+import org.apache.ibatis.annotations.Param;
+
 
 import com.example.task_app.dto.TaskDto;
 import com.example.task_app.form.TaskForm;
@@ -18,46 +17,12 @@ public interface TaskMapper {
      * 
      * @return
      */
-    @Select("""
-            SELECT
-            task_id,
-            title,
-            description,
-            status,
-            created_by,
-            created_at,
-            updated_at,
-            deleted
-            FROM task
-            WHERE deleted = false
-            ORDER BY task_id ASC
-            """)
-    List<TaskDto> findAll();
+     List<TaskDto> findAll();
 
     /**
      * タスクを追加する処理
      * @param taskDto
      */
-    @Insert("""
-                INSERT INTO task (
-                    title,
-                    description,
-                    status,
-                    created_by,
-                    created_at,
-                    updated_at,
-                    deleted
-                )
-                VALUES (
-                    #{title},
-                    #{description},
-                    #{status},
-                    #{createdBy},
-                    NOW(),
-                    NOW(),
-                    false
-                )
-            """)
     void createTask(TaskDto taskDto);
 
     /**
@@ -65,19 +30,6 @@ public interface TaskMapper {
      * @param taskId
      * @return
      */
-    @Select("""
-            SELECT
-            task_id,
-            title,
-            description,
-            status,
-            created_by,
-            created_at,
-            updated_at,
-            deleted
-            FROM task
-            WHERE task_id = #{taskId}
-            """)
     TaskDto findByTaskId(Integer taskId);
 
     /**
@@ -85,14 +37,6 @@ public interface TaskMapper {
      * @param taskForm
      * @return
      */
-    @Update("""
-            UPDATE task
-            SET title = #{title},
-            description=#{description},
-            status=#{status},
-            updated_at=Now()
-            WHERE task_id=#{taskId}
-            """)
     int updateByTaskId(TaskForm taskForm);
 
     /**
@@ -100,76 +44,11 @@ public interface TaskMapper {
      * @param taskId
      * @return
      */
-    @Update("""
-            UPDATE task
-            SET deleted = true          
-            WHERE task_id=#{taskId}
-            """)
     int deletedByTaskId(Integer taskId);
 
-    /**
-     * 検索結果を表示する
-     * @return 検索結果一覧
-     */
-    @Select("""
-            SELECT
-            task_id,
-            title,
-            description,
-            status,
-            created_by,
-            created_at,
-            updated_at,
-            deleted
-            FROM task
-            WHERE deleted = false
-            AND title LIKE '%' || #{keyword} || '%'
-            AND status = #{status}
-            ORDER BY task_id ASC
-            """)
-    List<TaskDto> searchList(String keyword,String status);
-
-    /**
-     * 検索結果を表示する(状態関連)
-     * @return 検索結果一覧
-     */
-    @Select("""
-            SELECT
-            task_id,
-            title,
-            description,
-            status,
-            created_by,
-            created_at,
-            updated_at,
-            deleted
-            FROM task
-            WHERE deleted = false
-            AND status = #{status}
-            ORDER BY task_id ASC
-            """)
-    List<TaskDto> searchStatusList(String status);
-
-
-     /**
-     * 検索結果を表示する
-     * @return 検索結果一覧
-     */
-    @Select("""
-            SELECT
-            task_id,
-            title,
-            description,
-            status,
-            created_by,
-            created_at,
-            updated_at,
-            deleted
-            FROM task
-            WHERE deleted = false
-            AND title LIKE '%' || #{keyword} || '%'
-            ORDER BY task_id ASC
-            """)
-    List<TaskDto> searchKeywordList(String keyword);
+    List<TaskDto> search(
+        @Param("keyword") String keyword,
+        @Param("status") String status
+    );
 
 }

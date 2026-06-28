@@ -30,22 +30,7 @@ public class TaskController {
     public String showTaskList(@RequestParam(required = false) String keyword,
             @RequestParam(required = false) String status, Model model) {
 
-        List<TaskDto> taskList;
-
-        boolean noKeyword = keyword == null || keyword.isBlank();
-        boolean noStatus = status == null || status.isBlank();
-
-        if (noKeyword && noStatus) {
-            taskList = taskService.getTaskList();
-        } else if (noKeyword) {
-            taskList = taskService.searchByStatus(status);
-
-        } else if (noStatus) {
-            taskList = taskService.searchByKeyword(keyword);
-
-        } else {
-            taskList = taskService.searchTask(keyword, status);
-        }
+        List<TaskDto> taskList = taskService.search(keyword, status);
 
         model.addAttribute("taskList", taskList);
 
